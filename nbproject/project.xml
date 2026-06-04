@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+  <type>org.netbeans.modules.web.project</type>
+  <configuration>
+    <data xmlns="http://www.netbeans.org/ns/web-project/3">
+      <name>MGPS</name>
+      <display-name>MGPS</display-name>
+      <web-module-version>4.0</web-module-version>
+      <context-path>/MGPS</context-path>
+      <source-level>17</source-level>
+      <j2ee-platform>Tomcat_9.0</j2ee-platform>
+      <web-module-content>src/main/webapp</web-module-content>
+      <web-inf>WEB-INF</web-inf>
+      <web-docbase>src/main/webapp</web-docbase>
+      <source-path>src/main/java</source-path>
+      <test-source-path>src/test/java</test-source-path>
+    </data>
+  </configuration>
+</project>

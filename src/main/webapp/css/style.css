@@ -1,0 +1,33 @@
+:root {
+  --primary: #0d6efd;
+  --surface: #ffffff;
+  --surface-alt: #f8f9fa;
+  --text: #212529;
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: var(--surface-alt);
+  color: var(--text);
+}
+
+.hero {
+  background: linear-gradient(135deg, rgba(13, 110, 253, .12), rgba(13, 110, 253, .02));
+}
+
+.card-hover {
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, .08);
+}
+
+.footer {
+  border-top: 1px solid rgba(255,255,255,.2);
+}
+
+.form-check-label {
+  cursor: pointer;
+}

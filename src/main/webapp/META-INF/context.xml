@@ -1,0 +1,8 @@
+<!-- Application context for Tomcat (JNDI DataSource). Copy to META-INF/context.xml in the WAR or to conf/context.xml -->
+<Context>
+  <Resource name="jdbc/MGPS" auth="Container" type="javax.sql.DataSource"
+            maxTotal="20" maxIdle="10" maxWaitMillis="10000"
+            driverClassName="oracle.jdbc.OracleDriver"
+            url="jdbc:oracle:thin:@//localhost:1521/XE"
+            username="mgps_app" password="mgps_password" />
+</Context>

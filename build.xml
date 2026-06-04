@@ -1,0 +1,4 @@
+<project name="MGPS" default="default" basedir=".">
+    <description>NetBeans build entry for MGPS web application.</description>
+    <import file="nbproject/build-impl.xml" optional="true"/>
+</project>

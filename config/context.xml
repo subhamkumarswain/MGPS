@@ -1,0 +1,8 @@
+<!-- Example context.xml for Tomcat connection pool (place under META-INF/context.xml or in server conf) -->
+<Context>
+  <Resource name="jdbc/MGPS" auth="Container" type="javax.sql.DataSource"
+            maxTotal="20" maxIdle="10" maxWaitMillis="10000"
+            driverClassName="oracle.jdbc.OracleDriver"
+            url="jdbc:oracle:thin:@//localhost:1521/XE"
+            username="mgps_app" password="mgps_password" />
+</Context>
