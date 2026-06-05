@@ -1,52 +1,201 @@
-# MGPS - Project Skeleton
+# 🎉 MGPS - Management and GPS System
 
-This workspace contains frontend templates, database DDL and Java servlet examples for the MGPS application (NetBeans + Oracle XE).
+Modern Node.js + Express.js backend with Bootstrap frontend and Oracle database
 
-Files added:
+## ⚡ Quick Start (3 Steps)
 
-- `web/templates/home.html` - Home page template
-- `web/templates/login.html` - Login page
-- `web/templates/register.html` - Registration form
-- `db/mgps_schema.sql` - Oracle DDL and sample role inserts
-- `src/main/java/com/mgps/util/PasswordUtil.java` - PBKDF2 password helper
-- `src/main/java/com/mgps/servlet/RegistrationServlet.java` - Registration servlet
-- `src/main/java/com/mgps/servlet/LoginServlet.java` - Login servlet
-- `src/main/java/com/mgps/model/User.java` - User domain model
-- `src/main/java/com/mgps/dao/UserDao.java` - User database access object
-- `src/main/java/com/mgps/service/UserService.java` - Registration and authentication service
-- `src/main/java/com/mgps/util/DbConnectionFactory.java` - JDBC connection factory with JNDI and direct JDBC fallback
-- `config/context.xml` - Sample DataSource (Tomcat)
+### 1. Install Node.js
+Download from: https://nodejs.org/ (LTS version)
 
-Quick setup notes
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-1. Add Oracle JDBC driver (`ojdbc8.jar` or newer) to your NetBeans project libraries or place it in `libs/ojdbc8.jar` and build with the `with-ojdbc` profile.
-2. Create the DB user and run `db/mgps_schema.sql` (as `mgps_app`).
+### 3. Start Server
+```bash
+npm start
+```
 
-Example commands (run in SQL*Plus or SQL Developer):
+Visit: **http://localhost:3000**
+
+---
+
+## 📦 Tech Stack
+
+- **Backend:** Node.js + Express.js
+- **Database:** Oracle XE
+- **Frontend:** Bootstrap 5 + Vanilla JavaScript
+- **Authentication:** Session-based + bcryptjs
+- **API:** RESTful endpoints
+
+---
+
+## 🚀 Features
+
+✅ User registration and login  
+✅ Secure password hashing (bcryptjs)  
+✅ Session management  
+✅ Role-based access control (EMP, E1, EL, CISF)  
+✅ Oracle database integration  
+✅ RESTful API endpoints  
+✅ Responsive Bootstrap UI  
+✅ Error handling & validation  
+
+---
+
+## 📁 Project Structure
+
+```
+MGPS/
+├── server.js                      # Express server
+├── package.json                   # Dependencies
+├── .env                           # Configuration
+├── config/database.js             # Oracle connection
+├── routes/auth.js                 # API endpoints
+├── service/userService.js         # Business logic
+├── dao/userDao.js                 # Database layer
+├── utils/passwordUtil.js          # Password hashing
+├── src/main/webapp/               # Frontend
+│   ├── index.html
+│   ├── login.html
+│   ├── register.html
+│   ├── home.html
+│   ├── js/api.js
+│   └── css/style.css
+└── db/mgps_schema.sql             # Database DDL
+```
+
+---
+
+## 🔧 Configuration
+
+Copy the example file and update your environment values:
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env`:
+
+```env
+SYS_USER=sys
+SYS_PASSWORD=your_sys_password
+SYS_CONNECTIONSTRING=localhost:1521/XEPDB1
+ORACLE_USER=mgps_app
+ORACLE_PASSWORD=mgps_password
+ORACLE_CONNECTIONSTRING=localhost:1521/XEPDB1
+PORT=3000
+NODE_ENV=development
+SESSION_SECRET=your_secret_key_here
+```
+
+If you run `setup-database.js`, the `SYS_USER` and `SYS_PASSWORD` values are required for initial Oracle setup. For Oracle XE, the default pluggable database service is typically `XEPDB1`.
+
+---
+
+## 📚 API Endpoints
+
+```
+POST   /api/auth/login       - User login
+POST   /api/auth/register    - New user registration
+GET    /api/auth/verify      - Check authentication
+GET    /api/logout           - User logout
+```
+
+---
+
+## 🌐 Frontend Pages
+
+- Home: http://localhost:3000
+- Login: http://localhost:3000/login.html
+- Register: http://localhost:3000/register.html
+- Dashboard: http://localhost:3000/home.html
+
+---
+
+## 📋 Database Setup
+
+Create Oracle user and tables:
 
 ```sql
 CREATE USER mgps_app IDENTIFIED BY mgps_password;
 GRANT CONNECT, RESOURCE TO mgps_app;
--- connect mgps_app/mgps_password
--- @db/mgps_schema.sql
 ```
 
-3. In NetBeans, create a web application, add the `src/main/java` classes to the project, and ensure servlet API (Jakarta/Javax) versions match your server.
-4. For production, configure a container-managed DataSource and use connection pooling instead of DriverManager.
+Then run: `db/mgps_schema.sql`
 
-NetBeans integration steps (quick)
+---
 
-- Open NetBeans and choose "Open Project" and select the folder containing `pom.xml` (the project is a Maven WAR).
-- You can also open the `nbproject` folder directly if you want the Ant-style NetBeans project wrapper.
-- Ensure the target server (Tomcat, GlassFish) is configured in NetBeans and has the Oracle JDBC driver available in its `lib` folder (or add `ojdbc8.jar` to the project's `lib` if you prefer).
-- Build the project (Right-click > Build). Deploy to the server (Right-click > Run).
-- To use the JNDI DataSource, copy `src/main/webapp/META-INF/context.xml` into Tomcat's `conf/context.xml` or deploy the WAR (Tomcat will pick up the WAR's META-INF/context.xml).
-- The frontend pages are now located at `src/main/webapp/home.html`, `src/main/webapp/login.html`, and `src/main/webapp/register.html`.
+## 📚 Documentation
 
-Using the JNDI DataSource
+- **SETUP_GUIDE.md** - Detailed setup instructions
+- **QUICK_START.md** - Quick reference
+- **README-NODEJS.md** - Full API documentation
+- **PROJECT_SETUP.md** - Complete checklist
 
-- The servlets now use a JNDI DataSource lookup at `java:comp/env/jdbc/MGPS` via `com.mgps.util.DataSourceUtil`.
-- Ensure the DataSource is configured in Tomcat (drop `src/main/webapp/META-INF/context.xml` into the WAR or add the resource in `conf/context.xml`).
+---
+
+## 🎯 Development Commands
+
+```bash
+npm start                 # Start production server
+npm run dev              # Start dev server (auto-reload)
+node --version          # Check Node.js version
+npm --version           # Check npm version
+npm install             # Install dependencies
+npm list                # List installed packages
+```
+
+---
+
+## 🐛 Troubleshooting
+
+**Node.js not found?**
+- Install from https://nodejs.org/
+- Restart PowerShell
+
+**Port already in use?**
+- Change PORT in .env
+- Or: `Get-Process -Name node | Stop-Process`
+
+**Database connection failed?**
+- Verify Oracle is running
+- Check credentials in .env
+- Install Oracle Instant Client
+
+---
+
+## ✨ Migration from Java
+
+**What Changed:**
+- Java servlets → Express.js routes
+- JSP templates → HTML + JavaScript
+- JDBC → OracleDB driver
+- Java DAO → JavaScript DAO
+
+**What Stayed the Same:**
+- Oracle database schema
+- User authentication logic
+- Role-based access control
+- Password hashing algorithm
+
+---
+
+## 🚀 Ready to Deploy?
+
+1. Set `NODE_ENV=production` in .env
+2. Use PM2: `npm install -g pm2 && pm2 start server.js`
+3. Set up Nginx reverse proxy
+4. Enable HTTPS/SSL
+
+See **README-NODEJS.md** for production setup.
+
+---
+
+**Status:** ✅ Ready for Development & Production  
+**Last Updated:** 2024  
+**Maintained By:** MGPS Development Team
 
 Build with local `ojdbc` in `libs`:
 
