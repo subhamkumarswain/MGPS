@@ -3,80 +3,644 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MGPS Home</title>
+  <title>MGPS - Dashboard Portal</title>
+  <!-- Google Fonts: Outfit -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="css/style.css" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- QRCode.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
+      --accent-color: #6366f1;
+      --bg-color: #f8fafc;
+      --card-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      --font-family: 'Outfit', sans-serif;
+    }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-color);
+      color: #1e293b;
+    }
+    .navbar {
+      background: var(--primary-gradient) !important;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .navbar-brand {
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .hero-section {
+      background: var(--primary-gradient);
+      color: white;
+      border-radius: 0 0 2rem 2rem;
+      padding: 3rem 0;
+      box-shadow: 0 10px 30px rgba(79, 70, 229, 0.15);
+    }
+    .card {
+      border: none;
+      border-radius: 1rem;
+      box-shadow: var(--card-shadow);
+      background: white;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    }
+    .nav-tabs-custom {
+      border-bottom: none;
+      margin-bottom: 2rem;
+    }
+    .nav-tabs-custom .nav-link {
+      border: none;
+      color: #64748b;
+      font-weight: 600;
+      padding: 0.8rem 1.5rem;
+      border-radius: 2rem;
+      margin-right: 0.5rem;
+      transition: all 0.3s ease;
+    }
+    .nav-tabs-custom .nav-link:hover {
+      background-color: #f1f5f9;
+      color: var(--accent-color);
+    }
+    .nav-tabs-custom .nav-link.active {
+      background: var(--primary-gradient);
+      color: white;
+      box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+    }
+    .status-badge {
+      font-weight: 600;
+      padding: 0.4em 0.8em;
+      border-radius: 2rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+    .badge-pending { background-color: #fef3c7; color: #d97706; }
+    .badge-approved { background-color: #d1fae5; color: #059669; }
+    .badge-rejected { background-color: #fee2e2; color: #dc2626; }
+    .badge-out { background-color: #dbeafe; color: #2563eb; }
+    .badge-in { background-color: #e2e8f0; color: #475569; }
+    .badge-returned { background-color: #f1f5f9; color: #0f172a; }
+    
+    .table-container {
+      background: white;
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    .table th {
+      background-color: #f8fafc;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      padding: 1rem;
+      border-bottom: 2px solid #edf2f7;
+    }
+    .table td {
+      padding: 1rem;
+      vertical-align: middle;
+      border-bottom: 1px solid #edf2f7;
+    }
+    .btn-action {
+      border-radius: 0.5rem;
+      font-weight: 600;
+      padding: 0.4rem 1rem;
+      transition: all 0.2s ease;
+    }
+    .btn-action:hover {
+      transform: translateY(-1px);
+    }
+  </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="home.html">MGPS</a>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="home.html"><i class="fa-solid fa-shield-halved me-2"></i>MGPS</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link active" href="home.html">Home</a></li>
-      </ul>
-      <ul class="navbar-nav">
-        <li class="nav-item"><span class="nav-link" id="userName">User</span></li>
-        <li class="nav-item"><button class="nav-link btn btn-link" id="logoutBtn">Logout</button></li>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+      <ul class="navbar-nav align-items-center">
+        <li class="nav-item">
+          <span class="nav-link text-white me-3" id="userName"><i class="fa-solid fa-user-circle me-1"></i> User</span>
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-outline-light btn-sm rounded-pill px-3" id="logoutBtn">
+            <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
+          </button>
+        </li>
       </ul>
     </div>
   </div>
 </nav>
 
-<header class="hero bg-light py-5">
+<!-- Hero Section -->
+<header class="hero-section text-center mb-5">
   <div class="container">
-    <h1 class="display-5">MGPS Portal</h1>
-    <p class="lead">Welcome to the Management and GPS System</p>
+    <h1 class="display-6 fw-bold">Management Portal Dashboard</h1>
+    <p class="opacity-75 mb-0">Secure role-based processing for Gatepasses, Material Passes, Reports & Admin Controls</p>
   </div>
 </header>
 
-<main class="container py-5">
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">User Profile</h5>
-      <div id="userDetails">
-        <p><strong>Loading user information...</strong></p>
+<!-- Main Workspace -->
+<main class="container mb-5">
+  <!-- Navigation Tabs -->
+  <ul class="nav nav-tabs nav-tabs-custom" id="dashboardTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab"><i class="fa-solid fa-id-card me-2"></i>Profile</button>
+    </li>
+    <li class="nav-item" role="presentation" id="applyTabItem">
+      <button class="nav-link" id="apply-tab" data-bs-toggle="tab" data-bs-target="#apply" type="button" role="tab"><i class="fa-solid fa-file-pen me-2"></i>Apply Pass</button>
+    </li>
+    <li class="nav-item" role="presentation" id="myPassesTabItem">
+      <button class="nav-link" id="myPasses-tab" data-bs-toggle="tab" data-bs-target="#myPasses" type="button" role="tab"><i class="fa-solid fa-clock-history me-2"></i>My History</button>
+    </li>
+    <li class="nav-item" role="presentation" id="approvalsTabItem" style="display:none;">
+      <button class="nav-link" id="approvals-tab" data-bs-toggle="tab" data-bs-target="#approvals" type="button" role="tab"><i class="fa-solid fa-list-check me-2"></i>Pending Approvals</button>
+    </li>
+    <li class="nav-item" role="presentation" id="gateControlTabItem" style="display:none;">
+      <button class="nav-link" id="gateControl-tab" data-bs-toggle="tab" data-bs-target="#gateControl" type="button" role="tab"><i class="fa-solid fa-person-military-pointing me-2"></i>Security Gate</button>
+    </li>
+    <li class="nav-item" role="presentation" id="reportsTabItem" style="display:none;">
+      <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab"><i class="fa-solid fa-chart-line me-2"></i>Reports</button>
+    </li>
+    <li class="nav-item" role="presentation" id="adminTabItem" style="display:none;">
+      <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#adminPanel" type="button" role="tab"><i class="fa-solid fa-users-gear me-2"></i>Admin panel</button>
+    </li>
+  </ul>
+
+  <!-- Tab Contents -->
+  <div class="tab-content" id="dashboardTabsContent">
+    
+    <!-- Tab 1: Profile -->
+    <div class="tab-pane fade show active" id="profile" role="tabpanel">
+      <div class="card p-4">
+        <div class="row align-items-center">
+          <div class="col-md-2 text-center mb-3 mb-md-0">
+            <i class="fa-solid fa-circle-user fa-5x text-primary"></i>
+          </div>
+          <div class="col-md-10">
+            <h4 class="fw-bold mb-3">Employee Details</h4>
+            <div id="userDetails" class="row">
+              <div class="col-md-6 mb-2"><strong>Employee ID:</strong> <span class="text-muted" id="profEmpId">-</span></div>
+              <div class="col-md-6 mb-2"><strong>Name:</strong> <span class="text-muted" id="profName">-</span></div>
+              <div class="col-md-6 mb-2"><strong>Designation:</strong> <span class="text-muted" id="profDesig">-</span></div>
+              <div class="col-md-6 mb-2"><strong>Department:</strong> <span class="text-muted" id="profDept">-</span></div>
+              <div class="col-md-12 mb-2"><strong>Assigned Roles:</strong> <span class="badge bg-primary px-2" id="profRoles">-</span></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- Tab 2: Apply Pass -->
+    <div class="tab-pane fade" id="apply" role="tabpanel">
+      <div class="row">
+        <!-- Gatepass Application Form -->
+        <div class="col-md-6 mb-4">
+          <div class="card p-4 h-100">
+            <h4 class="fw-bold mb-4 text-primary"><i class="fa-solid fa-passport me-2"></i>Apply for Gatepass</h4>
+            <form id="gatepassForm">
+              <div class="mb-3">
+                <label for="gatepassType" class="form-label">Gatepass Type</label>
+                <select class="form-select" id="gatepassType" required>
+                  <option value="" disabled selected>Select type</option>
+                  <option value="PERSONAL">PERSONAL</option>
+                  <option value="OFFICIAL">OFFICIAL</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="gatepassReason" class="form-label">Reason</label>
+                <textarea class="form-control" id="gatepassReason" rows="3" placeholder="State reason for exit/entry..." required></textarea>
+              </div>
+              <div class="row mb-3">
+                <div class="col-6">
+                  <label for="gatepassOutTime" class="form-label">Scheduled Out Time</label>
+                  <input type="datetime-local" class="form-control" id="gatepassOutTime" required>
+                </div>
+                <div class="col-6">
+                  <label for="gatepassInTime" class="form-label">Scheduled In Time</label>
+                  <input type="datetime-local" class="form-control" id="gatepassInTime" required>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-paper-plane me-1"></i> Submit Request</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Material Pass Application Form -->
+        <div class="col-md-6 mb-4">
+          <div class="card p-4 h-100">
+            <h4 class="fw-bold mb-4 text-primary"><i class="fa-solid fa-boxes-stacked me-2"></i>Apply for Material Pass</h4>
+            <form id="materialPassForm">
+              <div class="mb-3">
+                <label for="materialDesc" class="form-label">Material Description</label>
+                <textarea class="form-control" id="materialDesc" rows="2" placeholder="List item details, serial numbers..." required></textarea>
+              </div>
+              <div class="row mb-3">
+                <div class="col-6">
+                  <label for="materialQty" class="form-label">Quantity</label>
+                  <input type="number" class="form-control" id="materialQty" min="1" placeholder="e.g. 5" required>
+                </div>
+                <div class="col-6">
+                  <label for="materialPassType" class="form-label">Pass Type</label>
+                  <select class="form-select" id="materialPassType" required>
+                    <option value="" disabled selected>Select type</option>
+                    <option value="RETURNABLE">RETURNABLE</option>
+                    <option value="NON-RETURNABLE">NON-RETURNABLE</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-6">
+                  <label for="materialOutTime" class="form-label">Exit Out Time</label>
+                  <input type="datetime-local" class="form-control" id="materialOutTime" required>
+                </div>
+                <div class="col-6">
+                  <label id="lblReturnTime" for="materialReturnTime" class="form-label">Expected Return Time</label>
+                  <input type="datetime-local" class="form-control" id="materialReturnTime" required>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-paper-plane me-1"></i> Submit Request</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: My History -->
+    <div class="tab-pane fade" id="myPasses" role="tabpanel">
+      <!-- User's Gatepass History -->
+      <div class="card p-4 mb-4">
+        <h4 class="fw-bold mb-3 text-secondary"><i class="fa-solid fa-user-lock me-2"></i>My Gatepasses</h4>
+        <div class="table-responsive table-container">
+          <table class="table" id="myGatepassTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Reason</th>
+                <th>Out Time</th>
+                <th>In Time</th>
+                <th>Status</th>
+                <th>Approved By</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="8" class="text-center text-muted">No gatepasses found</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- User's Material Pass History -->
+      <div class="card p-4">
+        <h4 class="fw-bold mb-3 text-secondary"><i class="fa-solid fa-box-open me-2"></i>My Material Passes</h4>
+        <div class="table-responsive table-container">
+          <table class="table" id="myMaterialPassTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Material Description</th>
+                <th>Qty</th>
+                <th>Type</th>
+                <th>Out Time</th>
+                <th>Return Time</th>
+                <th>Status</th>
+                <th>Approved By</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="9" class="text-center text-muted">No material passes found</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Pending Approvals (E1 / EL) -->
+    <div class="tab-pane fade" id="approvals" role="tabpanel">
+      <!-- Pending Gatepasses -->
+      <div class="card p-4 mb-4">
+        <h4 class="fw-bold mb-3 text-warning"><i class="fa-solid fa-user-clock me-2"></i>Pending Gatepasses</h4>
+        <div class="table-responsive table-container">
+          <table class="table" id="pendingGatepassTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Emp ID / Name</th>
+                <th>Type</th>
+                <th>Reason</th>
+                <th>Out Time</th>
+                <th>In Time</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="7" class="text-center text-muted">No pending gatepasses</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pending Material Passes -->
+      <div class="card p-4">
+        <h4 class="fw-bold mb-3 text-warning"><i class="fa-solid fa-boxes-packing me-2"></i>Pending Material Passes</h4>
+        <div class="table-responsive table-container">
+          <table class="table" id="pendingMaterialPassTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Emp ID / Name</th>
+                <th>Material Details</th>
+                <th>Qty</th>
+                <th>Type</th>
+                <th>Out Time</th>
+                <th>Expected Return</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="8" class="text-center text-muted">No pending material passes</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 5: Security Gate Control (CISF) -->
+    <div class="tab-pane fade" id="gateControl" role="tabpanel">
+      <!-- Active Gatepasses -->
+      <div class="card p-4 mb-4">
+        <h4 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-person-arrow-up-from-line me-2"></i>CISF - Employee Gate Control</h4>
+        <div class="table-responsive table-container">
+          <table class="table" id="cisfGatepassTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Employee</th>
+                <th>Type</th>
+                <th>Reason</th>
+                <th>Out Time</th>
+                <th>In Time</th>
+                <th>Current Status</th>
+                <th>Gate Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="8" class="text-center text-muted">No approved gatepasses available</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Active Material Passes -->
+      <div class="card p-4">
+        <h4 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-truck-ramp-box me-2"></i>CISF - Material Gate Control</h4>
+        <div class="table-responsive table-container">
+          <table class="table" id="cisfMaterialPassTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Employee</th>
+                <th>Description</th>
+                <th>Qty</th>
+                <th>Type</th>
+                <th>Out Time</th>
+                <th>Return Time</th>
+                <th>Current Status</th>
+                <th>Gate Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="9" class="text-center text-muted">No approved material passes available</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 6: Reports & Exports (E1, EL, CISF) -->
+    <div class="tab-pane fade" id="reports" role="tabpanel">
+      <div class="card p-4 mb-4">
+        <h4 class="fw-bold mb-4 text-primary"><i class="fa-solid fa-magnifying-glass-chart me-2"></i>Search Reports & Logs</h4>
+        <form id="reportFilterForm" class="row g-3 align-items-end mb-4">
+          <div class="col-md-3">
+            <label for="repType" class="form-label">Pass Type</label>
+            <select class="form-select" id="repType" required>
+              <option value="GATEPASS">GATEPASS</option>
+              <option value="MATERIAL">MATERIAL PASS</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="repEmpId" class="form-label">Employee ID (Optional)</label>
+            <input type="text" class="form-control" id="repEmpId" placeholder="e.g. emp123">
+          </div>
+          <div class="col-md-2">
+            <label for="repStatus" class="form-label">Status</label>
+            <select class="form-select" id="repStatus">
+              <option value="">ALL STATUSES</option>
+              <option value="PENDING">PENDING</option>
+              <option value="APPROVED">APPROVED</option>
+              <option value="REJECTED">REJECTED</option>
+              <option value="OUT">OUT</option>
+              <option value="IN">IN</option>
+              <option value="RETURNED">RETURNED</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="repStart" class="form-label">Start Date</label>
+            <input type="date" class="form-control" id="repStart">
+          </div>
+          <div class="col-md-2">
+            <label for="repEnd" class="form-label">End Date</label>
+            <input type="date" class="form-control" id="repEnd">
+          </div>
+          <div class="col-md-1">
+            <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-filter"></i></button>
+          </div>
+        </form>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0 text-muted" id="repCount">Search Results (0)</h5>
+          <button id="exportCsvBtn" class="btn btn-success btn-sm btn-action" disabled><i class="fa-solid fa-file-excel me-1"></i> Export CSV</button>
+        </div>
+
+        <div class="table-responsive table-container">
+          <table class="table" id="reportResultTable">
+            <thead>
+              <tr id="reportHeaders">
+                <th>Search for reports to display logs</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="text-center text-muted">Use search filters above to load logs</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 7: Admin Panel (EL Only) -->
+    <div class="tab-pane fade" id="adminPanel" role="tabpanel">
+      <div class="card p-4">
+        <h4 class="fw-bold mb-4 text-primary"><i class="fa-solid fa-user-gear me-2"></i>Role & Profile Management</h4>
+        <div class="table-responsive table-container">
+          <table class="table" id="adminUsersTable">
+            <thead>
+              <tr>
+                <th>Emp ID</th>
+                <th>Name</th>
+                <th>Designation</th>
+                <th>Dept</th>
+                <th>Assigned Roles</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="6" class="text-center text-muted">Loading employee index...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </div>
 </main>
 
-<footer class="footer py-4 bg-primary text-white">
+<!-- Modal for Admin Edit User Profile/Roles -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="border-radius: 1rem;">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="editUserModalLabel"><i class="fa-solid fa-user-pen me-2"></i>Modify Employee</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editUserForm">
+          <input type="hidden" id="editEmpId">
+          <div class="mb-3">
+            <label for="editName" class="form-label">Employee Name</label>
+            <input type="text" class="form-control bg-light" id="editName" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="editDesignation" class="form-label">Designation</label>
+            <input type="text" class="form-control" id="editDesignation" required>
+          </div>
+          <div class="mb-3">
+            <label for="editDeptCode" class="form-label">Department Code</label>
+            <input type="text" class="form-control" id="editDeptCode" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label d-block fw-semibold">Assigned Roles</label>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="role_EMP" value="EMP">
+              <label class="form-check-label" for="role_EMP">EMP</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="role_E1" value="E1">
+              <label class="form-check-label" for="role_E1">E1</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="role_EL" value="EL">
+              <label class="form-check-label" for="role_EL">EL (Admin)</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="role_CISF" value="CISF">
+              <label class="form-check-label" for="role_CISF">CISF</label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-floppy-disk me-1"></i> Save Updates</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer py-4 bg-primary text-white mt-5">
   <div class="container text-center">
-    <small>MGPS | Employee Role-Based Access | CISF Ready</small>
+    <small><i class="fa-regular fa-copyright me-1"></i> 2026 MGPS | Management and Gatepass System | Secure Gate Control</small>
   </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/api.js"></script>
 <script>
+  let currentUser = null;
+  let loadedReportData = [];
+  let editUserModalObj = null;
+
+  function formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleString([], { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+
+  function getStatusBadgeClass(status) {
+    switch (status.toUpperCase()) {
+      case 'PENDING': return 'badge-pending';
+      case 'APPROVED': return 'badge-approved';
+      case 'REJECTED': return 'badge-rejected';
+      case 'OUT': return 'badge-out';
+      case 'IN': return 'badge-in';
+      case 'RETURNED': return 'badge-returned';
+      default: return 'bg-secondary';
+    }
+  }
+
+  // --- Auth & Initial Loading ---
   async function checkAuth() {
     try {
       const result = await ApiService.verify();
       if (result.authenticated) {
-        const user = result.user;
-        document.getElementById('userName').textContent = `Welcome, ${user.name}`;
-        
-        const details = `
-          <p><strong>Employee ID:</strong> ${user.empId}</p>
-          <p><strong>Name:</strong> ${user.name}</p>
-          <p><strong>Designation:</strong> ${user.designation || 'N/A'}</p>
-          <p><strong>Department:</strong> ${user.deptCode || 'N/A'}</p>
-          <p><strong>Roles:</strong> ${user.roles.join(', ') || 'None'}</p>
-        `;
-        document.getElementById('userDetails').innerHTML = details;
+        currentUser = result.user;
+        document.getElementById('userName').innerHTML = `<i class="fa-solid fa-user-circle me-1"></i> ${currentUser.name} (${currentUser.roles.join(', ')})`;
+
+        // Populate Profile Tab
+        document.getElementById('profEmpId').innerText = currentUser.empId;
+        document.getElementById('profName').innerText = currentUser.name;
+        document.getElementById('profDesig').innerText = currentUser.designation || 'N/A';
+        document.getElementById('profDept').innerText = currentUser.deptCode || 'N/A';
+        document.getElementById('profRoles').innerText = currentUser.roles.join(', ');
+
+        // Tab Visibility Logic
+        const isSupervisor = currentUser.roles.includes('E1') || currentUser.roles.includes('EL');
+        const isCISF = currentUser.roles.includes('CISF');
+        const isEL = currentUser.roles.includes('EL');
+
+        if (isSupervisor) document.getElementById('approvalsTabItem').style.display = 'block';
+        if (isCISF) document.getElementById('gateControlTabItem').style.display = 'block';
+        if (isSupervisor || isCISF) document.getElementById('reportsTabItem').style.display = 'block';
+        if (isEL) document.getElementById('adminTabItem').style.display = 'block';
+
+        // Load Initial Data
+        loadEmployeeHistory();
+        if (isSupervisor) loadSupervisorPending();
+        if (isCISF) loadCISFGateControl();
+        if (isEL) {
+          editUserModalObj = new bootstrap.Modal(document.getElementById('editUserModal'));
+          loadAdminUserPanel();
+        }
       } else {
         window.location.href = 'login.html';
       }
     } catch (error) {
-      console.error('Auth check failed:', error);
+      console.error('Auth verification failed:', error);
       window.location.href = 'login.html';
     }
   }
 
+  // Logout Trigger
   document.getElementById('logoutBtn').addEventListener('click', async () => {
     try {
       await ApiService.logout();
@@ -85,6 +649,639 @@
       console.error('Logout failed:', error);
       window.location.href = 'login.html';
     }
+  });
+
+  // Dynamic Label Logic for Material Return time based on type
+  document.getElementById('materialPassType').addEventListener('change', (e) => {
+    const isReturnable = e.target.value === 'RETURNABLE';
+    const returnTimeInput = document.getElementById('materialReturnTime');
+    if (isReturnable) {
+      returnTimeInput.required = true;
+      returnTimeInput.disabled = false;
+      document.getElementById('lblReturnTime').classList.remove('opacity-50');
+    } else {
+      returnTimeInput.required = false;
+      returnTimeInput.disabled = true;
+      returnTimeInput.value = '';
+      document.getElementById('lblReturnTime').classList.add('opacity-50');
+    }
+  });
+
+  // --- Form Submissions ---
+  document.getElementById('gatepassForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const type = document.getElementById('gatepassType').value;
+    const reason = document.getElementById('gatepassReason').value;
+    const outTime = document.getElementById('gatepassOutTime').value;
+    const inTime = document.getElementById('gatepassInTime').value;
+
+    try {
+      await ApiService.applyGatepass(type, reason, outTime, inTime);
+      alert('Gatepass request submitted successfully!');
+      document.getElementById('gatepassForm').reset();
+      loadEmployeeHistory();
+      const triggerEl = document.querySelector('#dashboardTabs button[data-bs-target="#myPasses"]');
+      bootstrap.Tab.getInstance(triggerEl).show();
+    } catch (error) {
+      alert('Failed to submit gatepass request: ' + error.message);
+    }
+  });
+
+  document.getElementById('materialPassForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const desc = document.getElementById('materialDesc').value;
+    const qty = document.getElementById('materialQty').value;
+    const type = document.getElementById('materialPassType').value;
+    const outTime = document.getElementById('materialOutTime').value;
+    const returnTime = document.getElementById('materialReturnTime').value;
+
+    try {
+      await ApiService.applyMaterialPass(desc, qty, type, outTime, returnTime);
+      alert('Material pass request submitted successfully!');
+      document.getElementById('materialPassForm').reset();
+      loadEmployeeHistory();
+      const triggerEl = document.querySelector('#dashboardTabs button[data-bs-target="#myPasses"]');
+      bootstrap.Tab.getInstance(triggerEl).show();
+    } catch (error) {
+      alert('Failed to submit material pass request: ' + error.message);
+    }
+  });
+
+  // --- Load Employee Pass History ---
+  async function loadEmployeeHistory() {
+    try {
+      // Load Gatepasses
+      const gatepasses = await ApiService.getMyGatepasses();
+      const gpTbody = document.querySelector('#myGatepassTable tbody');
+      if (gatepasses.length === 0) {
+        gpTbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted">No gatepasses found</td></tr>`;
+      } else {
+        gpTbody.innerHTML = gatepasses.map(g => {
+          let printBtn = '';
+          if (g.status === 'APPROVED' || g.status === 'OUT' || g.status === 'IN') {
+            printBtn = `<button onclick='printGatepass(${JSON.stringify(g)})' class="btn btn-sm btn-outline-primary btn-action"><i class="fa-solid fa-print"></i> Print</button>`;
+          }
+          return `
+            <tr>
+              <td><strong>#GP-${g.gatepassId}</strong></td>
+              <td><span class="badge bg-secondary">${g.gatepassType}</span></td>
+              <td>${g.reason}</td>
+              <td>${formatDate(g.outTime)}</td>
+              <td>${formatDate(g.inTime)}</td>
+              <td><span class="status-badge ${getStatusBadgeClass(g.status)}">${g.status}</span></td>
+              <td>${g.approvedBy || '<span class="text-muted">None</span>'}</td>
+              <td>${printBtn}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Load Material Passes
+      const materialPasses = await ApiService.getMyMaterialPasses();
+      const mpTbody = document.querySelector('#myMaterialPassTable tbody');
+      if (materialPasses.length === 0) {
+        mpTbody.innerHTML = `<tr><td colspan="9" class="text-center text-muted">No material passes found</td></tr>`;
+      } else {
+        mpTbody.innerHTML = materialPasses.map(m => {
+          let printBtn = '';
+          if (m.status === 'APPROVED' || m.status === 'OUT' || m.status === 'RETURNED') {
+            printBtn = `<button onclick='printMaterialpass(${JSON.stringify(m)})' class="btn btn-sm btn-outline-primary btn-action"><i class="fa-solid fa-print"></i> Print</button>`;
+          }
+          return `
+            <tr>
+              <td><strong>#MP-${m.passId}</strong></td>
+              <td>${m.materialDesc}</td>
+              <td>${m.quantity}</td>
+              <td><span class="badge bg-secondary">${m.passType}</span></td>
+              <td>${formatDate(m.outTime)}</td>
+              <td>${formatDate(m.returnTime)}</td>
+              <td><span class="status-badge ${getStatusBadgeClass(m.status)}">${m.status}</span></td>
+              <td>${m.approvedBy || '<span class="text-muted">None</span>'}</td>
+              <td>${printBtn}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+    } catch (error) {
+      console.error('Failed to load employee history lists:', error);
+    }
+  }
+
+  // --- Print Functions ---
+  function printGatepass(g) {
+    const printWindow = window.open('', '_blank', 'width=600,height=700');
+    printWindow.document.write(`
+      <html>
+      <head>
+        <title>MGPS Gatepass - GP-${g.gatepassId}</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+        <style>
+          body { font-family: 'Outfit', sans-serif; padding: 2rem; background: #fff; }
+          .pass-card { border: 2px solid #3b82f6; border-radius: 1rem; padding: 2rem; max-width: 450px; margin: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+          .pass-header { border-bottom: 2px dashed #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem; text-align: center; }
+          .qr-container { display: flex; justify-content: center; margin: 1.5rem 0; }
+          @media print {
+            body { padding: 0; }
+            .btn-print { display: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="pass-card">
+          <div class="pass-header">
+            <h3 class="fw-bold text-primary mb-0">GATEPASS RECEIPT</h3>
+            <small class="text-muted">MGPS Secure Exit/Entry Access</small>
+          </div>
+          <table class="table table-borderless">
+            <tr><td><strong>Pass ID:</strong></td><td>#GP-${g.gatepassId}</td></tr>
+            <tr><td><strong>Employee ID:</strong></td><td>${g.empId}</td></tr>
+            <tr><td><strong>Pass Type:</strong></td><td>${g.gatepassType}</td></tr>
+            <tr><td><strong>Reason:</strong></td><td>${g.reason}</td></tr>
+            <tr><td><strong>Out Time:</strong></td><td>${new Date(g.outTime).toLocaleString()}</td></tr>
+            <tr><td><strong>In Time:</strong></td><td>${new Date(g.inTime).toLocaleString()}</td></tr>
+            <tr><td><strong>Approved By:</strong></td><td>${g.approvedBy || 'N/A'}</td></tr>
+            <tr><td><strong>Status:</strong></td><td><span class="badge bg-success">${g.status}</span></td></tr>
+          </table>
+          <div class="qr-container" id="qrcode"></div>
+          <div class="text-center mt-3 btn-print">
+            <button onclick="window.print()" class="btn btn-primary px-4">Print</button>
+            <button onclick="window.close()" class="btn btn-outline-secondary px-4 ms-2">Close</button>
+          </div>
+        </div>
+        <script>
+          new QRCode(document.getElementById("qrcode"), {
+            text: "GP-${g.gatepassId}-${g.empId}-${g.status}",
+            width: 140,
+            height: 140
+          });
+        </script>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+  }
+
+  function printMaterialpass(m) {
+    const printWindow = window.open('', '_blank', 'width=600,height=750');
+    printWindow.document.write(`
+      <html>
+      <head>
+        <title>MGPS Material Pass - MP-${m.passId}</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+        <style>
+          body { font-family: 'Outfit', sans-serif; padding: 2rem; background: #fff; }
+          .pass-card { border: 2px solid #10b981; border-radius: 1rem; padding: 2rem; max-width: 450px; margin: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+          .pass-header { border-bottom: 2px dashed #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem; text-align: center; }
+          .qr-container { display: flex; justify-content: center; margin: 1.5rem 0; }
+          @media print {
+            body { padding: 0; }
+            .btn-print { display: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="pass-card">
+          <div class="pass-header">
+            <h3 class="fw-bold text-success mb-0">MATERIAL PASS RECEIPT</h3>
+            <small class="text-muted">MGPS Secure Material Access</small>
+          </div>
+          <table class="table table-borderless">
+            <tr><td><strong>Pass ID:</strong></td><td>#MP-${m.passId}</td></tr>
+            <tr><td><strong>Employee ID:</strong></td><td>${m.empId}</td></tr>
+            <tr><td><strong>Description:</strong></td><td>${m.materialDesc}</td></tr>
+            <tr><td><strong>Quantity:</strong></td><td>${m.quantity}</td></tr>
+            <tr><td><strong>Type:</strong></td><td>${m.passType}</td></tr>
+            <tr><td><strong>Out Time:</strong></td><td>${new Date(m.outTime).toLocaleString()}</td></tr>
+            <tr><td><strong>Return Time:</strong></td><td>${m.returnTime ? new Date(m.returnTime).toLocaleString() : 'N/A'}</td></tr>
+            <tr><td><strong>Approved By:</strong></td><td>${m.approvedBy || 'N/A'}</td></tr>
+            <tr><td><strong>Status:</strong></td><td><span class="badge bg-success">${m.status}</span></td></tr>
+          </table>
+          <div class="qr-container" id="qrcode"></div>
+          <div class="text-center mt-3 btn-print">
+            <button onclick="window.print()" class="btn btn-success px-4">Print</button>
+            <button onclick="window.close()" class="btn btn-outline-secondary px-4 ms-2">Close</button>
+          </div>
+        </div>
+        <script>
+          new QRCode(document.getElementById("qrcode"), {
+            text: "MP-${m.passId}-${m.empId}-${m.status}",
+            width: 140,
+            height: 140
+          });
+        </script>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+  }
+
+  // --- Load Pending Requests for Supervisor ---
+  async function loadSupervisorPending() {
+    try {
+      const gpPending = await ApiService.getPendingGatepasses();
+      const gpTbody = document.querySelector('#pendingGatepassTable tbody');
+      if (gpPending.length === 0) {
+        gpTbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted">No pending gatepasses</td></tr>`;
+      } else {
+        gpTbody.innerHTML = gpPending.map(g => `
+          <tr>
+            <td><strong>#GP-${g.gatepassId}</strong></td>
+            <td>${g.empName} <br><small class="text-muted">${g.empId}</small></td>
+            <td><span class="badge bg-secondary">${g.gatepassType}</span></td>
+            <td>${g.reason}</td>
+            <td>${formatDate(g.outTime)}</td>
+            <td>${formatDate(g.inTime)}</td>
+            <td>
+              <button onclick="handleApproveGatepass(${g.gatepassId}, 'APPROVED')" class="btn btn-sm btn-success btn-action me-1"><i class="fa-solid fa-check"></i> Approve</button>
+              <button onclick="handleApproveGatepass(${g.gatepassId}, 'REJECTED')" class="btn btn-sm btn-danger btn-action"><i class="fa-solid fa-xmark"></i> Reject</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      const mpPending = await ApiService.getPendingMaterialPasses();
+      const mpTbody = document.querySelector('#pendingMaterialPassTable tbody');
+      if (mpPending.length === 0) {
+        mpTbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted">No pending material passes</td></tr>`;
+      } else {
+        mpTbody.innerHTML = mpPending.map(m => `
+          <tr>
+            <td><strong>#MP-${m.passId}</strong></td>
+            <td>${m.empName} <br><small class="text-muted">${m.empId}</small></td>
+            <td>${m.materialDesc}</td>
+            <td>${m.quantity}</td>
+            <td><span class="badge bg-secondary">${m.passType}</span></td>
+            <td>${formatDate(m.outTime)}</td>
+            <td>${formatDate(m.returnTime)}</td>
+            <td>
+              <button onclick="handleApproveMaterialPass(${m.passId}, 'APPROVED')" class="btn btn-sm btn-success btn-action me-1"><i class="fa-solid fa-check"></i> Approve</button>
+              <button onclick="handleApproveMaterialPass(${m.passId}, 'REJECTED')" class="btn btn-sm btn-danger btn-action"><i class="fa-solid fa-xmark"></i> Reject</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+    } catch (error) {
+      console.error('Failed to load pending lists:', error);
+    }
+  }
+
+  async function handleApproveGatepass(id, status) {
+    try {
+      await ApiService.approveGatepass(id, status);
+      alert(`Gatepass has been ${status.toLowerCase()}!`);
+      loadSupervisorPending();
+    } catch (error) {
+      alert('Error updating gatepass approval status: ' + error.message);
+    }
+  }
+
+  async function handleApproveMaterialPass(id, status) {
+    try {
+      await ApiService.approveMaterialPass(id, status);
+      alert(`Material pass has been ${status.toLowerCase()}!`);
+      loadSupervisorPending();
+    } catch (error) {
+      alert('Error updating material pass approval status: ' + error.message);
+    }
+  }
+
+  // --- Load CISF Gate Control Lists ---
+  async function loadCISFGateControl() {
+    try {
+      const gpApproved = await ApiService.getApprovedGatepasses();
+      const gpTbody = document.querySelector('#cisfGatepassTable tbody');
+      if (gpApproved.length === 0) {
+        gpTbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted">No approved gatepasses available</td></tr>`;
+      } else {
+        gpTbody.innerHTML = gpApproved.map(g => {
+          let btn = '';
+          if (g.status === 'APPROVED') {
+            btn = `<button onclick="handleGateAction(${g.gatepassId}, 'check-out')" class="btn btn-sm btn-primary btn-action"><i class="fa-solid fa-arrow-right-from-bracket"></i> Check Out</button>`;
+          } else if (g.status === 'OUT') {
+            btn = `<button onclick="handleGateAction(${g.gatepassId}, 'check-in')" class="btn btn-sm btn-secondary btn-action"><i class="fa-solid fa-arrow-right-to-bracket"></i> Check In</button>`;
+          } else {
+            btn = `<span class="text-muted"><i class="fa-solid fa-circle-check text-success"></i> Flow Completed</span>`;
+          }
+
+          return `
+            <tr>
+              <td><strong>#GP-${g.gatepassId}</strong></td>
+              <td>${g.empName} <br><small class="text-muted">${g.empId}</small></td>
+              <td><span class="badge bg-secondary">${g.gatepassType}</span></td>
+              <td>${g.reason}</td>
+              <td>${formatDate(g.outTime)}</td>
+              <td>${formatDate(g.inTime)}</td>
+              <td><span class="status-badge ${getStatusBadgeClass(g.status)}">${g.status}</span></td>
+              <td>${btn}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      const mpApproved = await ApiService.getApprovedMaterialPasses();
+      const mpTbody = document.querySelector('#cisfMaterialPassTable tbody');
+      if (mpApproved.length === 0) {
+        mpTbody.innerHTML = `<tr><td colspan="9" class="text-center text-muted">No approved material passes available</td></tr>`;
+      } else {
+        mpTbody.innerHTML = mpApproved.map(m => {
+          let btn = '';
+          if (m.status === 'APPROVED') {
+            btn = `<button onclick="handleMaterialGateAction(${m.passId}, 'check-out')" class="btn btn-sm btn-primary btn-action"><i class="fa-solid fa-truck-moving"></i> Dispatch Out</button>`;
+          } else if (m.status === 'OUT') {
+            if (m.passType === 'RETURNABLE') {
+              btn = `<button onclick="handleMaterialGateAction(${m.passId}, 'return')" class="btn btn-sm btn-secondary btn-action"><i class="fa-solid fa-rotate-left"></i> Mark Returned</button>`;
+            } else {
+              btn = `<span class="text-muted"><i class="fa-solid fa-circle-check text-success"></i> Dispatched (Non-Ret)</span>`;
+            }
+          } else {
+            btn = `<span class="text-muted"><i class="fa-solid fa-circle-check text-success"></i> Flow Completed</span>`;
+          }
+
+          return `
+            <tr>
+              <td><strong>#MP-${m.passId}</strong></td>
+              <td>${m.empName} <br><small class="text-muted">${m.empId}</small></td>
+              <td>${m.materialDesc}</td>
+              <td>${m.quantity}</td>
+              <td><span class="badge bg-secondary">${m.passType}</span></td>
+              <td>${formatDate(m.outTime)}</td>
+              <td>${formatDate(m.returnTime)}</td>
+              <td><span class="status-badge ${getStatusBadgeClass(m.status)}">${m.status}</span></td>
+              <td>${btn}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+    } catch (error) {
+      console.error('Failed to load CISF lists:', error);
+    }
+  }
+
+  async function handleGateAction(id, action) {
+    try {
+      await ApiService.updateGateStatus(id, action);
+      alert(`Gate action '${action}' completed!`);
+      loadCISFGateControl();
+    } catch (error) {
+      alert('Error updating gate status: ' + error.message);
+    }
+  }
+
+  async function handleMaterialGateAction(id, action) {
+    try {
+      await ApiService.updateMaterialGateStatus(id, action);
+      alert(`Material gate action '${action}' completed!`);
+      loadCISFGateControl();
+    } catch (error) {
+      alert('Error updating material gate status: ' + error.message);
+    }
+  }
+
+  // --- Option 2: Reports Filter and CSV Downloader ---
+  document.getElementById('reportFilterForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const type = document.getElementById('repType').value;
+    const empId = document.getElementById('repEmpId').value;
+    const status = document.getElementById('repStatus').value;
+    const startDate = document.getElementById('repStart').value;
+    const endDate = document.getElementById('repEnd').value;
+
+    const filters = { empId, status, startDate, endDate };
+    const repHeadersTr = document.getElementById('reportHeaders');
+    const repTbody = document.querySelector('#reportResultTable tbody');
+    const exportBtn = document.getElementById('exportCsvBtn');
+
+    try {
+      if (type === 'GATEPASS') {
+        loadedReportData = await ApiService.getGatepassReport(filters);
+        repHeadersTr.innerHTML = `
+          <th>ID</th>
+          <th>Employee Details</th>
+          <th>Pass Type</th>
+          <th>Reason</th>
+          <th>Out Time</th>
+          <th>In Time</th>
+          <th>Status</th>
+          <th>Approved By</th>
+        `;
+        if (loadedReportData.length === 0) {
+          repTbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted">No matching gatepasses found</td></tr>`;
+          exportBtn.disabled = true;
+        } else {
+          repTbody.innerHTML = loadedReportData.map(g => `
+            <tr>
+              <td><strong>#GP-${g.gatepassId}</strong></td>
+              <td>${g.empName} (${g.empId})</td>
+              <td><span class="badge bg-secondary">${g.gatepassType}</span></td>
+              <td>${g.reason}</td>
+              <td>${formatDate(g.outTime)}</td>
+              <td>${formatDate(g.inTime)}</td>
+              <td><span class="status-badge ${getStatusBadgeClass(g.status)}">${g.status}</span></td>
+              <td>${g.approvedBy || 'N/A'}</td>
+            </tr>
+          `).join('');
+          exportBtn.disabled = false;
+        }
+      } else {
+        filters.passType = ''; // Let's keep it open
+        loadedReportData = await ApiService.getMaterialReport(filters);
+        repHeadersTr.innerHTML = `
+          <th>ID</th>
+          <th>Employee Details</th>
+          <th>Material Description</th>
+          <th>Qty</th>
+          <th>Pass Type</th>
+          <th>Out Time</th>
+          <th>Return Time</th>
+          <th>Status</th>
+          <th>Approved By</th>
+        `;
+        if (loadedReportData.length === 0) {
+          repTbody.innerHTML = `<tr><td colspan="9" class="text-center text-muted">No matching material passes found</td></tr>`;
+          exportBtn.disabled = true;
+        } else {
+          repTbody.innerHTML = loadedReportData.map(m => `
+            <tr>
+              <td><strong>#MP-${m.passId}</strong></td>
+              <td>${m.empName} (${m.empId})</td>
+              <td>${m.materialDesc}</td>
+              <td>${m.quantity}</td>
+              <td><span class="badge bg-secondary">${m.passType}</span></td>
+              <td>${formatDate(m.outTime)}</td>
+              <td>${formatDate(m.returnTime)}</td>
+              <td><span class="status-badge ${getStatusBadgeClass(m.status)}">${m.status}</span></td>
+              <td>${m.approvedBy || 'N/A'}</td>
+            </tr>
+          `).join('');
+          exportBtn.disabled = false;
+        }
+      }
+      document.getElementById('repCount').innerText = `Search Results (${loadedReportData.length})`;
+    } catch (error) {
+      alert('Error fetching report logs: ' + error.message);
+    }
+  });
+
+  // Client-Side CSV Generator
+  document.getElementById('exportCsvBtn').addEventListener('click', () => {
+    if (loadedReportData.length === 0) return;
+    const type = document.getElementById('repType').value;
+    const filename = `${type.toLowerCase()}_report_${new Date().toISOString().slice(0,10)}.csv`;
+
+    let headers = [];
+    let csvRows = [];
+
+    if (type === 'GATEPASS') {
+      headers = ['GatepassID', 'EmpID', 'EmpName', 'Type', 'Reason', 'OutTime', 'InTime', 'Status', 'ApprovedBy', 'CreatedAt'];
+      csvRows.push(headers.join(','));
+      loadedReportData.forEach(g => {
+        csvRows.push([
+          g.gatepassId,
+          g.empId,
+          `"${g.empName.replace(/"/g, '""')}"`,
+          g.gatepassType,
+          `"${g.reason.replace(/"/g, '""')}"`,
+          g.outTime || '',
+          g.inTime || '',
+          g.status,
+          g.approvedBy || '',
+          g.createdAt
+        ].join(','));
+      });
+    } else {
+      headers = ['PassID', 'EmpID', 'EmpName', 'MaterialDesc', 'Quantity', 'Type', 'OutTime', 'ReturnTime', 'Status', 'ApprovedBy', 'CreatedAt'];
+      csvRows.push(headers.join(','));
+      loadedReportData.forEach(m => {
+        csvRows.push([
+          m.passId,
+          m.empId,
+          `"${m.empName.replace(/"/g, '""')}"`,
+          `"${m.materialDesc.replace(/"/g, '""')}"`,
+          m.quantity,
+          m.passType,
+          m.outTime || '',
+          m.returnTime || '',
+          m.status,
+          m.approvedBy || '',
+          m.createdAt
+        ].join(','));
+      });
+    }
+
+    const csvContent = "data:text/csv;charset=utf-8," + csvRows.join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+
+  // --- Option 3: Admin User Control Panel ---
+  async function loadAdminUserPanel() {
+    try {
+      const users = await ApiService.getAllUsers();
+      const adminTbody = document.querySelector('#adminUsersTable tbody');
+      if (users.length === 0) {
+        adminTbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">No employees found</td></tr>`;
+      } else {
+        adminTbody.innerHTML = users.map(u => `
+          <tr>
+            <td><strong>${u.empId}</strong></td>
+            <td>${u.name}</td>
+            <td>${u.designation || '<span class="text-muted">N/A</span>'}</td>
+            <td>${u.deptCode || '<span class="text-muted">N/A</span>'}</td>
+            <td>${u.roles.map(r => `<span class="badge bg-secondary me-1">${r}</span>`).join('')}</td>
+            <td>
+              <button onclick='openEditUserModal(${JSON.stringify(u)})' class="btn btn-sm btn-primary btn-action me-1"><i class="fa-solid fa-user-pen"></i> Edit</button>
+              <button onclick="handleDeleteUser('${u.empId}')" class="btn btn-sm btn-danger btn-action"><i class="fa-solid fa-trash-can"></i> Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+    } catch (error) {
+      console.error('Failed to load admin user list:', error);
+    }
+  }
+
+  function openEditUserModal(user) {
+    document.getElementById('editEmpId').value = user.empId;
+    document.getElementById('editName').value = user.name;
+    document.getElementById('editDesignation').value = user.designation || '';
+    document.getElementById('editDeptCode').value = user.deptCode || '';
+
+    // Check checkboxes
+    document.getElementById('role_EMP').checked = user.roles.includes('EMP');
+    document.getElementById('role_E1').checked = user.roles.includes('E1');
+    document.getElementById('role_EL').checked = user.roles.includes('EL');
+    document.getElementById('role_CISF').checked = user.roles.includes('CISF');
+
+    editUserModalObj.show();
+  }
+
+  // Handle Edit Submit
+  document.getElementById('editUserForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const empId = document.getElementById('editEmpId').value;
+    const designation = document.getElementById('editDesignation').value;
+    const deptCode = document.getElementById('editDeptCode').value;
+
+    const roles = [];
+    if (document.getElementById('role_EMP').checked) roles.push('EMP');
+    if (document.getElementById('role_E1').checked) roles.push('E1');
+    if (document.getElementById('role_EL').checked) roles.push('EL');
+    if (document.getElementById('role_CISF').checked) roles.push('CISF');
+
+    try {
+      await ApiService.updateUser(empId, designation, deptCode, roles);
+      alert('Employee details and roles updated successfully!');
+      editUserModalObj.hide();
+      loadAdminUserPanel();
+      // Reload profile if we modified our own user details
+      if (empId === currentUser.empId) checkAuth();
+    } catch (error) {
+      alert('Failed to update employee: ' + error.message);
+    }
+  });
+
+  async function handleDeleteUser(empId) {
+    if (empId === currentUser.empId) {
+      alert('You cannot delete your own administrator account.');
+      return;
+    }
+    if (!confirm(`Are you sure you want to permanently delete employee account '${empId}'? All their records and history will be cleared.`)) {
+      return;
+    }
+
+    try {
+      await ApiService.deleteUser(empId);
+      alert('Employee deleted successfully!');
+      loadAdminUserPanel();
+    } catch (error) {
+      alert('Failed to delete employee: ' + error.message);
+    }
+  }
+
+  // --- Dynamic Tab loading events ---
+  const tabElements = document.querySelectorAll('#dashboardTabs button');
+  tabElements.forEach(tab => {
+    tab.addEventListener('shown.bs.tab', (e) => {
+      const targetId = e.target.getAttribute('data-bs-target');
+      if (targetId === '#myPasses') {
+        loadEmployeeHistory();
+      } else if (targetId === '#approvals') {
+        loadSupervisorPending();
+      } else if (targetId === '#gateControl') {
+        loadCISFGateControl();
+      } else if (targetId === '#adminPanel') {
+        loadAdminUserPanel();
+      }
+    });
   });
 
   checkAuth();

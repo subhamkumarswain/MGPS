@@ -30,10 +30,16 @@ app.use(express.static(path.join(__dirname, 'src/main/webapp')));
 
 // Import routes
 const authRoutes = require('./routes/auth');
+const gatepassRoutes = require('./routes/gatepass');
+const materialPassRoutes = require('./routes/materialPass');
+const adminRoutes = require('./routes/admin');
 const database = require('./config/database');
 
 // Use routes
 app.use('/api/auth', authRoutes);
+app.use('/api/gatepass', gatepassRoutes);
+app.use('/api/materialpass', materialPassRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
